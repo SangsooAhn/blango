@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 user_model = get_user_model()
 from django import template
 from django.utils.html import format_html
+from blog.models import Post
 
 register = template.Library()
 
@@ -71,3 +72,16 @@ def author_details_tag(context):
         suffix = ""
 
     return format_html("{}{}{}", prefix, name, suffix)
+
+# @register.inclusion_tag('blog/post-list.html')
+# def recent_posts(current_post):
+
+#     posts = Post.objects.all().sorted('-published_at')[:5]
+#     posts = [post for post in posts if post != current_post]
+
+#     return {"posts":posts, "title":}
+
+@register.inclusion_tag("blog/post-list.html")
+def recent_posts(post):
+    posts = Post.objects.exclude(pk=post.pk)[:5]
+    return {"title": "Recent Posts", "posts": posts}
