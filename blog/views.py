@@ -1,10 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from blog.models import Post
 from blog.forms import CommentForm
+import logging
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 def index(request):
     posts = Post.objects.all()
+    logger.debug(f'Got {len(posts)} posts')
     return render(request, "blog/index.html", {"posts":posts})
 
 
@@ -16,6 +19,7 @@ def post_detail(request, slug):
 
             if comment_form.is_valid():
                 comment = comment_form.save(commit=False)
+                logger.info('created comment on Post %d for user %s', post.pk, request.user)
                 comment.content_object = post
                 comment.creator = request.user
                 comment.save()
