@@ -7,7 +7,16 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.value
+
+class AuthorProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    bio = models.TextField()
+    
+    def __str__(self):
+        return f'{self.__class__.__name__} object for {self.user}'
         
+
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
